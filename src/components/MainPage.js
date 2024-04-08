@@ -2,10 +2,8 @@ import styles from '../app.module.css';
 import { useState } from 'react';
 import { useNewTodo, useLoadTodos } from '../hooks/index';
 import { Link } from 'react-router-dom';
-import { TaskPage } from './TaskPage';
 
-export const MainPage = () => {
-	const [refreshTodos, setRefreshTodos] = useState(false);
+export const MainPage = ({ refreshTodos, setRefreshTodos }) => {
 	const [searchTodo, setSearchTodo] = useState(null);
 	const [isSort, setIsSort] = useState(false);
 
@@ -15,8 +13,6 @@ export const MainPage = () => {
 		refreshTodos,
 		setRefreshTodos,
 	);
-
-	TaskPage(refreshTodos, setRefreshTodos);
 
 	const onChangeSearchTodo = ({ target }) => {
 		setSearchTodo(target.value);

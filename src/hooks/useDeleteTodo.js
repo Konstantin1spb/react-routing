@@ -1,5 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 export const useDeleteTodo = (setCurrentId, refreshTodos, setRefreshTodos) => {
-	console.log('refreshTodos', refreshTodos);
+	const navigate = useNavigate();
 	const onClickDeleteTodo = (id) => {
 		fetch(`http://localhost:3005/todos/${id}`, {
 			method: 'DELETE',
@@ -9,6 +10,7 @@ export const useDeleteTodo = (setCurrentId, refreshTodos, setRefreshTodos) => {
 				console.log('Todo deleted:', response);
 				setCurrentId(id);
 				setRefreshTodos(!refreshTodos);
+				navigate(-1);
 			});
 	};
 

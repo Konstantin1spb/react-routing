@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 export const useNewTodo = (refreshTodos, setRefreshTodos) => {
-	console.log('refreshTodos', refreshTodos);
 	const [newTodo, setNewTodo] = useState();
 
 	const onChangeNewTodo = ({ target }) => {

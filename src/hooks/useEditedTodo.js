@@ -21,7 +21,7 @@ export const useEditedTodo = (refreshTodos, setRefreshTodos, currentId, setCurre
 
 	const onSubmitEditedTodo = (event) => {
 		event.preventDefault();
-		fetch(`http://localhost:3005/todos/${currentId}`, {
+		return fetch(`http://localhost:3005/todos/${currentId}`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify({
@@ -32,6 +32,7 @@ export const useEditedTodo = (refreshTodos, setRefreshTodos, currentId, setCurre
 			.then((response) => {
 				console.log('Todo edited:', response);
 				setRefreshTodos(!refreshTodos);
+				return response;
 			})
 			.finally(() => setOpenModal(false));
 	};

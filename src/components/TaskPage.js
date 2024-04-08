@@ -1,23 +1,15 @@
 import { useState } from 'react';
 import styles from '../app.module.css';
-import { useLoadTodos, useEditedTodo, useDeleteTodo } from '../hooks';
+import { useEditedTodo, useDeleteTodo } from '../hooks';
 import { useParams } from 'react-router-dom';
 import { StepBackLink } from '../components/index';
+import { useLoadTodoById } from '../hooks/useLoadTodoById';
 
-export const TaskPage = (refreshTodos, setRefreshTodos) => {
+export const TaskPage = ({ refreshTodos, setRefreshTodos }) => {
 	const [currentId, setCurrentId] = useState();
-	console.log('refreshTodos', refreshTodos);
 	const params = useParams();
-	const todos = useLoadTodos();
 
-	let taskTitle = '';
-	let taskId = '';
-	todos.forEach(({ title, id }) => {
-		if (id === Number(params.id)) {
-			taskTitle = title;
-			taskId = id;
-		}
-	});
+	const [todo, setTodo] = useLoadTodoById(params.id);
 
 	const {
 		editedTodo,
@@ -29,6 +21,16 @@ export const TaskPage = (refreshTodos, setRefreshTodos) => {
 	} = useEditedTodo(refreshTodos, setRefreshTodos, currentId, setCurrentId);
 
 	const onClickDeleteTodo = useDeleteTodo(setCurrentId, refreshTodos, setRefreshTodos);
+
+	const handleSubmitEditedTodo = async (event) => {
+		const response = await onSubmitEditedTodo(event);
+		setTodo(response);
+		console.log('RESPONSE', response);
+	};
+
+	if (!todo) {
+		return null;
+	}
 	return (
 		<>
 			<StepBackLink />
@@ -36,21 +38,21 @@ export const TaskPage = (refreshTodos, setRefreshTodos) => {
 				className={`${styles.todosContainer} ${openModal ? styles.blured : null}`}
 			>
 				<div className={styles.todo}>
-					{taskTitle}
+					{todo.title}
 					<div>
 						<span
 							className={styles.editButton}
-							onClick={() => onClickOpenToEditTodo(taskId)}
+							onClick={() => onClickOpenToEditTodo(todo.id)}
 						></span>
 						<span
 							className={styles.deleteButton}
-							onClick={() => onClickDeleteTodo(taskId)}
+							onClick={() => onClickDeleteTodo(todo.id)}
 						></span>
 					</div>
 				</div>
 			</div>
 			<form
-				onSubmit={onSubmitEditedTodo}
+				onSubmit={handleSubmitEditedTodo}
 				className={`${styles.editTodoForm} ${openModal ? styles.active : null}`}
 			>
 				{editedTodoError && <div className={styles.error}>{editedTodoError}</div>}
